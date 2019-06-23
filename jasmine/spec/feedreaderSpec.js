@@ -1,3 +1,4 @@
+
 /* feedreader.js
  *
  * This is the spec file that Jasmine will read and contains
@@ -16,7 +17,7 @@ describe('RSS Feeds', () => {
     * allFeeds in app.js to be an empty array and refresh the
     * page?
     */
-  it('are defined', () => {
+  it('are defined and not empty', () => {
     expect(allFeeds).toBeDefined();
     expect(allFeeds.length).not.toBe(0);
   });
@@ -26,52 +27,146 @@ describe('RSS Feeds', () => {
     * in the allFeeds object and ensures it has a URL defined
     * and that the URL is not empty.
     */
+   it('should have url defined and url is not empty', function() {
+      let urlCounter = 0;
+      let urlNotEmptyCounter = 0;
+      let allFeedsLength = allFeeds.length;
 
+      for(let i = 0; i < allFeeds.length; i++) {
+        if(allFeeds[i].url !== undefined) {
+          urlCounter++;
+          if(allFeeds[i].url !== '') {
+            urlNotEmptyCounter++;
+          }
+        }
+      }
+
+
+
+
+      expect(urlCounter).toBe(allFeedsLength);
+      expect(urlNotEmptyCounter).toBe(allFeedsLength);
+   });
 
   /* TODO: Write a test that loops through each feed
     * in the allFeeds object and ensures it has a name defined
     * and that the name is not empty.
     */
+   it('should have a name defined and is not empty', function() {
+      let nameCounter = 0;
+      let nameNotEmptyCounter = 0;
+      let allFeedsLength = allFeeds.length;
+    
 
-    /* TODO: Write a test that loops through each feed
-    * in the allFeeds object and ensures it has a name defined
-    * and that the name is not empty.
-    */
+      for(let i = 0; i < allFeeds.length; i++) {
+        if(allFeeds[i].name !== undefined) {
+          nameCounter++;
+          if(allFeeds[i].name !== '') {
+            nameNotEmptyCounter++;
+          }
+        }
+      }
+
+      expect(nameCounter).toBe(allFeedsLength);
+      expect(nameNotEmptyCounter).toBe(allFeedsLength);
+   });
+
 
 });
 
 
 /* TODO: Write a new test suite named "The menu" */
 
-  /* TODO: Write a test that ensures the menu element is
+describe('The Menu', function() {
+/* TODO: Write a test that ensures the menu element is
     * hidden by default. You'll have to analyze the HTML and
     * the CSS to determine how we're performing the
     * hiding/showing of the menu element.
-    */
-
-    /* TODO: Write a test that ensures the menu changes
+    */   
+  it('menu element is hidden by default', function() {
+    expect(document.body.classList.contains('menu-hidden')).toBe(true);  
+  });
+/* TODO: Write a test that ensures the menu changes
     * visibility when the menu icon is clicked. This test
     * should have two expectations: does the menu display when
     * clicked and does it hide when clicked again.
     */
 
-/* TODO: Write a new test suite named "Initial Entries" */
+  it('should change visibility when clicking on menu icon', function() {
+    let menuIcon = document.querySelector('.menu-icon-link');
+    
+    menuIcon.click();
+    expect(document.body.classList.contains('menu-hidden')).not.toBe(true);
 
-  /* TODO: Write a test that ensures when the loadFeed
+    menuIcon.click();
+    expect(document.body.classList.contains('menu-hidden')).toBe(true);
+  });
+
+
+
+    
+  
+
+
+
+
+    
+/* TODO: Write a new test suite named "Initial Entries" */
+describe('Initial Entries', function() {
+/* TODO: Write a test that ensures when the loadFeed
     * function is called and completes its work, there is at least
     * a single .entry element within the .feed container.
     * Remember, loadFeed() is asynchronous so this test will require
     * the use of Jasmine's beforeEach and asynchronous done() function.
-    */
+    */  
+    it('after loading feeds there should be at least one article in feeds', function() {
+      return loadFeed(0).then((response) => {
+        let atLeastOneEntry = document.querySelectorAll('.feed .entry').length;
+        expect(atLeastOneEntry).toBeGreaterThan(0);
+    });
+  });
+
+});
+  
 
 /* TODO: Write a new test suite named "New Feed Selection" */
-
-  /* TODO: Write a test that ensures when a new feed is loaded
+describe('New Feed Selection', function() {
+/* TODO: Write a test that ensures when a new feed is loaded
     * by the loadFeed function that the content actually changes.
     * Remember, loadFeed() is asynchronous.
     */
-
+   it('should change the content', function() {
+    let p = new Promise((resolve) => {
+      if(document.querySelector('.entry-link .entry h2').textContent === null) {
+        while(document.querySelector('.entry-link .entry h2').textContent == null) {
+          console.log("loading the page");
+          if(document.querySelector('.entry-link .entry h2').textContent !== null) {
+            resolve();
+          }
+        } 
+      }
+    }).then((resolve) => {
+        let currentFeedFirstData = document.querySelector('.entry-link .entry h2').textContent;
+        console.log(currentFeedFirstData);
+          return menuIcon.click()
+            .then(() => { 
+              return (document.querySelector('.feed-list a').click())
+            }).then(() => {
+              let nextFeedFirstData = document.querySelector('.entry-link .entry h2').textContent;
+              return expect(nextFeedFirstData).toEqual(currentFeedFirstData);
+            });     
+        });
+    });
+    
+      
     /* Write a test to make sure that the content in the element 'header-title'
     * matches the content found in the 'a' link that was clicked
     */
 
+});
+  
+
+
+});
+
+  
